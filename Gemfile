@@ -48,5 +48,3 @@ gem 'rack-cors'
 gem 'rack-attack'
 
 gem 'devise'
-
-gem 'simple_token_authentication', '~> 1.0'
