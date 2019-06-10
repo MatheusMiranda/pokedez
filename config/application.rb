@@ -40,7 +40,7 @@ module Pokedez
           methods: %i(get post put patch delete options head)
       end
     end
-  end
 
-  config.middleware.use Rack::Attack
+    config.middleware.use Rack::Attack
+  end
 end
