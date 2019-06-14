@@ -3,6 +3,7 @@ class CreatePokemons < ActiveRecord::Migration[5.2]
     create_table :pokemons do |t|
       t.string :name
       t.string :sprite
+      t.integer :evolution
 
       t.timestamps
     end
