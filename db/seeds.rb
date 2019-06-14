@@ -1,21 +1,46 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
-
 require 'net/http'
 require 'json'
 
-pokeapi_base_url = 'https://pokeapi.co/api/v2/'
+def process_evolution_chain(chain_data)
+  return if chain_data['evolves_to'].empty?
 
-for pokemon_id in 1..151 do
-  sleep(1)
-  request_result = Net::HTTP.get(URI.parse(pokeapi_base_url + 'pokemon/' + pokemon_id.to_s))
+  base_pokemon_name = chain_data['species']['name']
+  evolution_pokemons = []
 
-  pokemon_data = JSON.parse(request_result)
+  chain_data['evolves_to'].each do |evolution|
+    evolution_pokemons << evolution['species']['name']
+    process_evolution_chain(evolution)
+  end
 
-  Pokemon.create(name: pokemon_data['name'])
+  base_pokemon = Pokemon.find_by(name: base_pokemon_name)
+  if base_pokemon != nil
+    base_pokemon.evolutions = evolution_pokemons
+    base_pokemon.save
+  end
 end
+
+def get_evolution_chains
+  evolution_chain_base_url = 'https://pokeapi.co/api/v2/evolution-chain/'
+  for chain_id in 1..78 do
+    chain_result = JSON.parse(Net::HTTP.get(URI.parse(evolution_chain_base_url + chain_id.to_s)))['chain']
+
+    process_evolution_chain(chain_result)
+  end
+end
+
+def get_pokemons
+  pokeapi_base_url = 'https://pokeapi.co/api/v2/'
+
+  for pokemon_id in 1..151 do
+    sleep(1)
+    result = Net::HTTP.get(URI.parse(pokeapi_base_url + 'pokemon/' + pokemon_id.to_s))
+
+    pokemon_data = JSON.parse(result)
+
+    puts "Creating pokemon " + pokemon_data['name']
+    Pokemon.create(name: pokemon_data['name'])
+  end
+end
+
+get_pokemons()
+get_evolution_chains()
