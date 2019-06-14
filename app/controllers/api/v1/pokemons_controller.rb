@@ -14,9 +14,7 @@ class Api::V1::PokemonsController < ApplicationController
 
   #GET /api/v1/pokemons/:pokemon_id
   def show
-    pokemon = Pokemon.find(params[:id])
-
-    render json: pokemon
+    render json: @pokemon
   end
 
   # POST /api/v1/pokemons
@@ -62,6 +60,6 @@ class Api::V1::PokemonsController < ApplicationController
     end
 
     def pokemon_params
-      params.require(:pokemon).permit(:name, :teste)
+      params.require(:pokemon).permit(:name, :types, :evolutions, :sprite)
     end
 end

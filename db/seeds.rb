@@ -28,6 +28,17 @@ def get_evolution_chains
   end
 end
 
+def create_pokemon(pokemon_data)
+  puts "Creating pokemon " + pokemon_data['name']
+
+  pokemon_types = []
+  pokemon_data['types'].each do |type|
+    pokemon_types << type['type']['name']
+  end
+
+  Pokemon.create(name: pokemon_data['name'], types: pokemon_types)
+end
+
 def get_pokemons
   pokeapi_base_url = 'https://pokeapi.co/api/v2/'
 
@@ -35,10 +46,7 @@ def get_pokemons
     sleep(1)
     result = Net::HTTP.get(URI.parse(pokeapi_base_url + 'pokemon/' + pokemon_id.to_s))
 
-    pokemon_data = JSON.parse(result)
-
-    puts "Creating pokemon " + pokemon_data['name']
-    Pokemon.create(name: pokemon_data['name'])
+    create_pokemon(JSON.parse(result))
   end
 end
 
