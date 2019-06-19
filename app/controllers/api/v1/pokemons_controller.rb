@@ -93,6 +93,6 @@ class Api::V1::PokemonsController < ApplicationController
     end
 
     def pokemon_params
-      params.require(:pokemon).permit(:name, :sprite, types: [], evolutions: [])
+      params.require(:pokemon).permit(:name, :sprite, :photo, types: [], evolutions: [])
     end
 end

@@ -48,3 +48,5 @@ gem 'rack-cors'
 gem 'rack-attack'
 
 gem 'devise'
+
+gem 'paperclip', '~> 5.1.0'
