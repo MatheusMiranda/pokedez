@@ -1,5 +1,6 @@
 require 'net/http'
 require 'json'
+require 'open-uri'
 
 def process_evolution_chain(chain_data)
   return if chain_data['evolves_to'].empty?
@@ -36,7 +37,10 @@ def create_pokemon(pokemon_data)
     pokemon_types << type['type']['name']
   end
 
-  Pokemon.create(name: pokemon_data['name'], types: pokemon_types)
+  pokemon_name = pokemon_data['name']
+  pokemon_sprite_url = pokemon_data['sprites']['front_default']
+
+  Pokemon.create(name: pokemon_name, types: pokemon_types, photo: URI.parse(pokemon_sprite_url))
 end
 
 def get_pokemons

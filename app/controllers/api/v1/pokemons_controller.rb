@@ -10,7 +10,10 @@ class Api::V1::PokemonsController < ApplicationController
       |pokemon| pokemon.name.downcase.include? filter_param.downcase
     }.map{ |pokemon|
       {
-        id: pokemon.id, name: pokemon.name, types: pokemon.types
+        id: pokemon.id, name: pokemon.name, types: pokemon.types,
+        photo: {
+         url: pokemon.photo.url,
+        }
       }
     }
 
@@ -19,7 +22,15 @@ class Api::V1::PokemonsController < ApplicationController
 
   #GET /api/v1/pokemons/:pokemon_id
   def show
-    render json: { id: @pokemon.id, name: @pokemon.name, types: @pokemon.types, evolutions: get_evolutions}
+    render json: {
+                   id: @pokemon.id, name: @pokemon.name,
+                   types: @pokemon.types, evolutions: get_evolutions,
+                   photo: {
+                            url: @pokemon.photo.url,
+                            name: @pokemon.photo.original_filename,
+                            id: @pokemon.id
+                          }
+                 }
   end
 
   # POST /api/v1/pokemons
