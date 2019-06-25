@@ -9,5 +9,5 @@ class Pokemon < ApplicationRecord
 
   validates_attachment_presence :photo
   validates_attachment_file_name :photo, matches: [/png\Z/, /jpe?g\Z/, /gif\Z/]
-  validates :name, :presence => true
+  validates :name, :presence => true, uniqueness: true
 end
