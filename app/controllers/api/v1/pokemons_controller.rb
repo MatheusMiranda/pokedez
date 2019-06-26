@@ -8,14 +8,7 @@ class Api::V1::PokemonsController < ApplicationController
 
     pokemons = Pokemon.all.select{
       |pokemon| pokemon.name.downcase.include? filter_param.downcase
-    }.map{ |pokemon|
-      {
-        id: pokemon.id, name: pokemon.name, types: pokemon.types,
-        photo: {
-         url: pokemon.photo.url,
-        }
-      }
-    }
+    }.map{ |pokemon| pokemon.as_json }
 
     render json: pokemons
   end
@@ -39,10 +32,8 @@ class Api::V1::PokemonsController < ApplicationController
 
     respond_to do |format|
       if @pokemon.save
-        format.html { redirect_to @pokemon, notice: 'Pokemon was successfully created.' }
         format.json { render :show, status: :created, location: @pokemon }
       else
-        format.html { render :new }
         format.json { render json: @pokemon.errors, status: :unprocessable_entity }
       end
     end
@@ -52,10 +43,8 @@ class Api::V1::PokemonsController < ApplicationController
   def update
     respond_to do |format|
       if @pokemon.update(pokemon_params)
-        format.html { redirect_to @pokemon, notice: 'Pokemon was successfully updated.' }
         format.json { render :show, status: :ok, location: @pokemon }
       else
-        format.html { render :edit }
         format.json { render json: @pokemon.errors, status: :unprocessable_entity }
       end
     end
@@ -65,7 +54,6 @@ class Api::V1::PokemonsController < ApplicationController
   def destroy
     @pokemon.destroy
     respond_to do |format|
-      format.html { redirect_to pokemons_url, notice: 'Pokemon was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
