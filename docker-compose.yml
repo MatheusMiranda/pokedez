@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  rails-server:
+    image: matheusmiranda/pokedez:latest
+    build:
+      context: .
+      dockerfile: ./docker/rails-server/Dockerfile
+    ports:
+      - 3001:3000
+    depends_on:
+      - rails-server-db
+    command: "rails s -b 0.0.0.0"
+    volumes:
+      - .:/app
+
+  rails-server-db:
+    image: postgres:10.5
+    restart: unless-stopped
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  react-server:
+    image: matheusmiranda/pokedez-react:latest
+    ports:
+      - 3000:3000
+    depends_on:
+      - rails-server
+    command: "npm start"
