@@ -48,3 +48,15 @@ gem 'rack-cors'
 gem 'rack-attack'
 
 gem 'paperclip', '~> 5.1.0'
+
+group :development, :test do
+  gem 'rspec-rails'
+  gem 'factory_bot_rails'
+end
+
+group :test do
+  gem 'faker'
+  gem 'capybara'
+  gem 'guard-rspec'
+  gem 'launchy'
+end
