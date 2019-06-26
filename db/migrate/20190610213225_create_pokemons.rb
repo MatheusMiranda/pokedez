@@ -5,6 +5,7 @@ class CreatePokemons < ActiveRecord::Migration[5.2]
       t.string :sprite
       t.string :evolutions, array: true, default: []
       t.string :types, array: true, default: []
+      t.text   :description
 
       t.timestamps
     end
