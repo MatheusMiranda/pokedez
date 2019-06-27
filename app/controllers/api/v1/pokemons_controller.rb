@@ -4,11 +4,7 @@ class Api::V1::PokemonsController < ApplicationController
 
   # GET /api/v1/pokemons
   def index
-    filter_param = params[:filter] || ""
-
-    pokemons = Pokemon.all.select{
-      |pokemon| pokemon.name.downcase.include? filter_param.downcase
-    }.map{ |pokemon| pokemon.as_json }
+    pokemons = Pokemon.all.map{ |pokemon| pokemon.as_json }
 
     render json: pokemons
   end
@@ -16,82 +12,75 @@ class Api::V1::PokemonsController < ApplicationController
   #GET /api/v1/pokemons/:pokemon_id
   def show
     render json: {
-                   id: @pokemon.id, name: @pokemon.name,
-                   types: @pokemon.types, evolutions: get_evolutions,
-                   photo: {
-                            url: @pokemon.photo.url,
-                            name: @pokemon.photo.original_filename,
-                            id: @pokemon.id
-                          }
-                 }
+      id: @pokemon.id, name: @pokemon.name,
+      types: @pokemon.types, evolutions: get_evolutions,
+      photo: {
+        url: @pokemon.photo.url,
+        name: @pokemon.photo.original_filename,
+        id: @pokemon.id
+      }
+    }
   end
 
   # POST /api/v1/pokemons
   def create
     @pokemon = Pokemon.new(pokemon_params)
 
-    respond_to do |format|
-      if @pokemon.save
-        format.json { render :show, status: :created, location: @pokemon }
-      else
-        format.json { render json: @pokemon.errors, status: :unprocessable_entity }
-      end
+    if @pokemon.save
+      render json: @pokemon, status: 200
+    else
+      render json: @pokemon.errors, status: :unprocessable_entity
     end
   end
 
   # PATCH/PUT /pokemons/1
   def update
-    respond_to do |format|
-      if @pokemon.update(pokemon_params)
-        format.json { render :show, status: :ok, location: @pokemon }
-      else
-        format.json { render json: @pokemon.errors, status: :unprocessable_entity }
-      end
+    if @pokemon.update(pokemon_params)
+      render json: @pokemon
+    else
+      render json: @pokemon.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /pokemons/1
   def destroy
     @pokemon.destroy
-    respond_to do |format|
-      format.json { head :no_content }
-    end
   end
 
   private
-    def get_evolutions
-      evolutions = []
+  def get_evolutions
+    evolutions = []
 
-      first_evolutions = []
-      second_evolutions = []
+    first_evolutions = []
+    second_evolutions = []
 
-      @pokemon.evolutions.each do |evolution|
-        evolution_pokemon = Pokemon.find_by("name": evolution)
-        if evolution_pokemon != nil
-          first_evolutions << evolution_pokemon
+    @pokemon.evolutions.each do |evolution|
+      pokemon = Pokemon.find_by("name": evolution)
+      if pokemon != nil
+        first_evolutions << pokemon
+      end
+    end
+
+    first_evolutions.each do |evol|
+      evol.evolutions.each do |evolution|
+        pokemon = Pokemon.find_by("name": evolution)
+        if pokemon != nil
+          second_evolutions << pokemon
         end
       end
-
-      first_evolutions.each do |evol|
-        evol.evolutions.each do |evolution|
-          evolution_pokemon = Pokemon.find_by("name": evolution)
-          if evolution_pokemon!= nil
-            second_evolutions << evolution_pokemon
-          end
-        end
-      end
-
-      evolutions << first_evolutions
-      evolutions << second_evolutions
-
-      evolutions
     end
 
-    def set_pokemon
-      @pokemon = Pokemon.find(params[:id])
-    end
+    evolutions << first_evolutions
+    evolutions << second_evolutions
 
-    def pokemon_params
-      params.require(:pokemon).permit(:name, :sprite, :photo, types: [], evolutions: [])
-    end
+    evolutions
+  end
+
+  def set_pokemon
+    @pokemon = Pokemon.find(params[:id])
+  end
+
+  def pokemon_params
+    params.require(:pokemon).permit(:name, :photo, types: [], evolutions: [])
+  end
 end

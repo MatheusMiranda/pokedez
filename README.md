@@ -1,24 +1,56 @@
-# README
+# Pokedez
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Run with docker
 
-Things you may want to cover:
+To run with docker you need first to config the database and create Pokemons.
+```sh
+sudo docker-compose run rails-server ./scripts/setup_database.sh
+```
 
-* Ruby version
+After running it you need to wait for the database to be populated, all the data is fetched from [Pokeapi](https://pokeapi.co/).
 
-* System dependencies
+Next, start the services using the following command:
 
-* Configuration
+```sh
+sudo docker-compose up
+```
 
-* Database creation
+## Executing tests
 
-* Database initialization
+```sh
+sudo docker-compose run rails-server rspec
+```
 
-* How to run the test suite
+# Run locally
 
-* Services (job queues, cache servers, search engines, etc.)
+To run locally you need to install the following dependencies: 
 
-* Deployment instructions
+* Ruby version: '2.5.5'
+* Rais version: '~> 5.2.3'
+* Postgres version: '10'
 
-* ...
+After installing the dependecies just configure the database and start the server:
+
+Create database:
+
+```sh
+rail db:create
+```
+
+Apply migrations:
+
+```sh
+rails db:migrate
+```
+
+Run seeds to populate database:
+
+```sh
+rails db:seed
+```
+
+Execute rails server:
+
+```sh
+rails s
+```

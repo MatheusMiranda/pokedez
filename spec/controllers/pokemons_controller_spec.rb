@@ -54,17 +54,4 @@ describe Api::V1::PokemonsController do
     end
   end
 
-  describe "POST #create - create pokemon", type: :request do
-    let(:pokemon) { create(:pokemon) }
-
-    before do
-      post '/api/v1/pokemons', params: { pokemon: pokemon.attributes
-                                       }
-    end
-
-    it 'returns a created status' do
-      expect(response).to have_http_status(:created)
-    end
-  end
-
 end
