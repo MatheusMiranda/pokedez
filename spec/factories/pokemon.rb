@@ -4,7 +4,6 @@ FactoryBot.define do
     types {["grass", "poison"]}
     evolutions {["charmilion", "raichu"]}
     sequence(:description)   { |n| "Awesome description for Pokemon #{n}" }
-    #sprite { File.new(Rails.root.join('spec', 'fixtures', 'filename.png')) }
 
     before :create do |pokemon|
       pokemon.photo_file_name = "photo.jpg"
