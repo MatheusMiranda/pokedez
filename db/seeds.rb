@@ -29,10 +29,6 @@ def get_evolution_chains
   end
 end
 
-def get_pokemon_description(pokemon_description_url)
-    JSON.parse(Net::HTTP.get(URI.parse(pokemon_description_url)))['flavor_text_entries'][1]['flavor_text']
-end
-
 def create_pokemon(pokemon_data)
   puts "Creating pokemon " + pokemon_data['name']
 
@@ -44,9 +40,7 @@ def create_pokemon(pokemon_data)
   pokemon_name = pokemon_data['name']
   pokemon_sprite_url = pokemon_data['sprites']['front_default']
 
-  pokemon_description = get_pokemon_description(pokemon_data['species']['url'])
-
-  Pokemon.create(name: pokemon_name, types: pokemon_types, photo: URI.parse(pokemon_sprite_url), description: pokemon_description)
+  Pokemon.create(name: pokemon_name, types: pokemon_types, photo: URI.parse(pokemon_sprite_url))
 end
 
 def get_pokemons

@@ -9,4 +9,4 @@ COPY . .
 
 RUN bundle install
 
-CMD "./scripts/init_server.sh"
+CMD "bundle exec rails s -b 0.0.0.0"

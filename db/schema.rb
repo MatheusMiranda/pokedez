@@ -17,10 +17,8 @@ ActiveRecord::Schema.define(version: 2019_06_19_142229) do
 
   create_table "pokemons", force: :cascade do |t|
     t.string "name"
-    t.string "sprite"
     t.string "evolutions", default: [], array: true
     t.string "types", default: [], array: true
-    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "photo_file_name"

@@ -3,7 +3,6 @@ FactoryBot.define do
     sequence(:name) { |n| "#{Faker::Lorem.word} #{n}" }
     types {["grass", "poison"]}
     evolutions {["charmilion", "raichu"]}
-    sequence(:description)   { |n| "Awesome description for Pokemon #{n}" }
 
     before :create do |pokemon|
       pokemon.photo_file_name = "photo.jpg"

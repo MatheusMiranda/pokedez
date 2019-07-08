@@ -50,7 +50,6 @@ class Api::V1::PokemonsController < ApplicationController
   private
   def get_evolutions
     evolutions = []
-
     first_evolutions = []
     second_evolutions = []
 
@@ -61,8 +60,8 @@ class Api::V1::PokemonsController < ApplicationController
       end
     end
 
-    first_evolutions.each do |evol|
-      evol.evolutions.each do |evolution|
+    first_evolutions.each do |first_evolution|
+      first_evolution.evolutions.each do |evolution|
         pokemon = Pokemon.find_by("name": evolution)
         if pokemon != nil
           second_evolutions << pokemon
@@ -72,7 +71,6 @@ class Api::V1::PokemonsController < ApplicationController
 
     evolutions << first_evolutions
     evolutions << second_evolutions
-
     evolutions
   end
 

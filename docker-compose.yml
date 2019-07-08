@@ -10,7 +10,7 @@ services:
       - 3001:3000
     depends_on:
       - rails-server-db
-    command: "bundle exec rails s -b 0.0.0.0"
+    command: bash -c "rm -rf tmp/ && bundle exec rails s -b 0.0.0.0"
     volumes:
       - .:/app
 
